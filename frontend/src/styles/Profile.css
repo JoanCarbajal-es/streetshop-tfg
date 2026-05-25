@@ -1,0 +1,218 @@
+.profile {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+}
+
+.profile__user-card {
+    background-color: var(--color-white);
+    padding: 36px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-grey-200);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.profile__name {
+    font-family: var(--font-display);
+    font-size: 36px;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+}
+
+.profile__email {
+    font-size: 15px;
+    color: var(--color-grey-600);
+    margin-bottom: 24px;
+}
+
+.profile__logout-btn {
+    padding: 9px 24px;
+    background-color: transparent;
+    color: var(--color-danger);
+    border: 1.5px solid var(--color-danger);
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--transition), color var(--transition);
+}
+
+.profile__logout-btn:hover {
+    background-color: var(--color-danger);
+    color: var(--color-white);
+}
+
+.profile__orders {
+    background-color: var(--color-white);
+    padding: 36px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-grey-200);
+    box-shadow: var(--shadow-sm);
+}
+
+.profile__section-title {
+    font-family: var(--font-display);
+    font-size: 26px;
+    letter-spacing: 2px;
+    margin-bottom: 28px;
+}
+
+.profile__orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.order-card {
+    border: 1.5px solid var(--color-grey-200);
+    border-radius: var(--radius-md);
+    padding: 22px;
+}
+
+.order-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 18px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--color-grey-200);
+}
+
+.order-card__number {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+    color: var(--color-black);
+}
+
+.order-card__date {
+    font-size: 13px;
+    color: var(--color-grey-600);
+    margin: 0;
+}
+
+.order-badge {
+    padding: 5px 14px;
+    border-radius: var(--radius-pill);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.order-badge--pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.order-badge--paid {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.order-badge--shipped {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+.order-badge--delivered {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.order-card__items {
+    margin-bottom: 18px;
+}
+
+.order-card__item {
+    display: flex;
+    justify-content: space-between;
+    padding: 9px 0;
+    font-size: 14px;
+    border-bottom: 1px solid var(--color-grey-100);
+    color: var(--color-grey-800);
+}
+
+.order-card__item-subtotal {
+    font-weight: 600;
+    color: var(--color-black);
+}
+
+.order-card__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-grey-200);
+}
+
+.order-card__total-label {
+    font-size: 13px;
+    color: var(--color-grey-600);
+    margin-bottom: 3px;
+}
+
+.order-card__total-amount {
+    font-family: var(--font-display);
+    font-size: 24px;
+    letter-spacing: 1px;
+}
+
+.order-card__invoice-btn {
+    padding: 10px 20px;
+    background-color: var(--color-black);
+    color: var(--color-white);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--transition);
+}
+
+.order-card__invoice-btn:hover {
+    background-color: #222;
+}
+
+.profile__loading,
+.profile__error {
+    text-align: center;
+    padding: 40px;
+    font-size: 15px;
+}
+
+.profile__loading {
+    color: var(--color-grey-400);
+}
+
+.profile__error {
+    color: var(--color-danger);
+}
+
+.profile__no-orders {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--color-grey-600);
+}
+
+.profile__no-orders p {
+    margin-bottom: 20px;
+    font-size: 15px;
+}
+
+.profile__shop-btn {
+    padding: 12px 28px;
+    background-color: var(--color-black);
+    color: var(--color-white);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background var(--transition);
+}
+
+.profile__shop-btn:hover {
+    background-color: #222;
+}

@@ -1,0 +1,92 @@
+.healthcheck {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--color-grey-100);
+    padding: 20px;
+}
+
+.healthcheck__card {
+    background-color: var(--color-white);
+    border-radius: var(--radius-md);
+    padding: 40px;
+    box-shadow: var(--shadow-md);
+    max-width: 500px;
+    width: 100%;
+    border: 1px solid var(--color-grey-200);
+}
+
+.healthcheck__title {
+    font-family: var(--font-display);
+    font-size: 28px;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: var(--color-black);
+}
+
+.healthcheck__badge {
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    background-color: var(--color-grey-100);
+    color: var(--color-grey-800);
+    margin-bottom: 20px;
+    letter-spacing: 0.3px;
+}
+
+.healthcheck__info {
+    background-color: #e8f5e9;
+    padding: 16px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #2e7d32;
+}
+
+.healthcheck__error {
+    background-color: #ffebee;
+    padding: 16px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--color-danger);
+}
+
+.healthcheck__btn {
+    width: 100%;
+    padding: 13px;
+    background-color: var(--color-black);
+    color: var(--color-white);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: background var(--transition), color var(--transition);
+}
+
+.healthcheck__btn:hover:not(:disabled) {
+    background-color: var(--color-accent);
+    color: var(--color-black);
+}
+
+.healthcheck__btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.healthcheck__api-info {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: var(--color-grey-100);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    text-align: center;
+    color: var(--color-grey-600);
+}

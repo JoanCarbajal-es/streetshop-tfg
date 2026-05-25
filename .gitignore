@@ -1,0 +1,223 @@
+# =====================================================
+# STREETSHOP - GITIGNORE
+# =====================================================
+# Archivos y carpetas que NO se suben a GitHub
+# =====================================================
+
+# =====================================================
+# VARIABLES DE ENTORNO Y SECRETOS (CRÍTICO)
+# =====================================================
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+.env.*.local
+
+# Archivos de configuración con secretos
+application-secrets.properties
+*-secrets.yml
+*-secrets.yaml
+
+# =====================================================
+# BACKEND - JAVA / SPRING BOOT
+# =====================================================
+
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+.mvn/
+mvnw
+mvnw.cmd
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# Archivos compilados
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+
+# Logs
+*.log
+logs/
+spring.log
+
+# IDEs
+## IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+## Eclipse
+.classpath
+.project
+.settings/
+bin/
+.metadata/
+
+## NetBeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+
+## VS Code
+.vscode/
+*.code-workspace
+
+# =====================================================
+# FRONTEND - REACT / NODE.JS
+# =====================================================
+
+# Dependencias
+node_modules/
+jspm_packages/
+
+# Build de producción
+build/
+dist/
+.next/
+out/
+
+# Cache
+.npm
+.eslintcache
+.stylelintcache
+.cache/
+
+# Logs de Node
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+pnpm-debug.log*
+
+# Testing
+coverage/
+*.lcov
+.nyc_output
+
+# Misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# =====================================================
+# DOCKER
+# =====================================================
+
+# Volúmenes de datos locales
+postgres_data/
+mysql_data/
+mongo_data/
+
+# Archivos de Docker
+*.pid
+*.seed
+*.pid.lock
+
+# =====================================================
+# SISTEMA OPERATIVO
+# =====================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# =====================================================
+# EDITORES DE TEXTO
+# =====================================================
+*.swp
+*.swo
+*.swn
+*~
+.vim/
+*.sublime-project
+*.sublime-workspace
+
+# =====================================================
+# OTROS
+# =====================================================
+
+# Archivos temporales
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+
+# Archivos de base de datos locales
+*.sqlite
+*.sqlite3
+*.db
+
+# Certificados SSL
+*.pem
+*.key
+*.crt
+*.p12
+
+# Dumps de base de datos
+*.sql.gz
+*.dump
+
+# Archivos grandes
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# Node
+package-lock.json
+yarn.lock

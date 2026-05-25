@@ -1,0 +1,101 @@
+.navbar {
+    border-bottom: 1px solid var(--border-light);
+    background-color: #ffffff;
+    padding: 20px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar__logo {
+    font-size: 1.1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    text-decoration: none;
+    color: #000;
+}
+
+.navbar__links {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.navbar__link {
+    text-decoration: none;
+    color: #000;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    transition: opacity 0.3s;
+}
+
+.navbar__link:hover {
+    opacity: 0.5;
+}
+
+.navbar__logout {
+    background: none;
+    border: 1px solid #000;
+    padding: 8px 15px;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.navbar__logout:hover {
+    background: #000;
+    color: #fff;
+}
+
+.nav-icon {
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+.nav-icon--admin {
+    color: #c0392b;
+}
+
+.navbar__link--admin:hover .nav-icon--admin {
+    color: #e67e22;
+    filter: drop-shadow(0 0 5px rgba(230, 126, 34, 0.5));
+    transition: all 0.3s ease;
+}
+
+.navbar__link--cart {
+    position: relative;
+}
+
+.navbar__badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: #000;
+    color: #fff;
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 50%;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

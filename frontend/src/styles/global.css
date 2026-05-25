@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --color-black: #0a0a0a;
+    --color-white: #ffffff;
+    --color-grey-100: #f7f7f7;
+    --color-grey-200: #eeeeee;
+    --color-grey-400: #aaaaaa;
+    --color-grey-600: #666666;
+    --color-grey-800: #333333;
+    --color-accent: #e8ff00;
+    /* amarillo neón streetwear */
+    --color-danger: #ff3b3b;
+
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-pill: 999px;
+
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.18);
+
+    --transition: 0.25s ease;
+
+    --max-width: 1200px;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--color-white);
+    color: var(--color-black);
+    -webkit-font-smoothing: antialiased;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    font-family: var(--font-body);
+    cursor: pointer;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}

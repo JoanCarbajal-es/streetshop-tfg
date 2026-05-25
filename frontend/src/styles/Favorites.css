@@ -1,0 +1,105 @@
+.favorites {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+}
+
+.favorites__header {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.favorites__title {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 7vw, 64px);
+    letter-spacing: 4px;
+    line-height: 1;
+    margin-bottom: 10px;
+}
+
+.favorites__subtitle {
+    font-size: 15px;
+    color: var(--color-grey-600);
+}
+
+.favorites__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 24px;
+}
+
+.favorites__item {
+    position: relative;
+}
+
+.favorites__remove-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 6px 12px;
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 1px solid var(--color-grey-200);
+    border-radius: var(--radius-pill);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--color-danger);
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    z-index: 10;
+    transition: background var(--transition), color var(--transition);
+}
+
+.favorites__remove-btn:hover {
+    background-color: var(--color-danger);
+    color: var(--color-white);
+    border-color: var(--color-danger);
+}
+
+.favorites__loading,
+.favorites__error {
+    text-align: center;
+    padding: 80px 20px;
+    font-size: 15px;
+}
+
+.favorites__loading {
+    color: var(--color-grey-400);
+}
+
+.favorites__error {
+    color: var(--color-danger);
+}
+
+.favorites__empty {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.favorites__empty h2 {
+    font-family: var(--font-display);
+    font-size: 36px;
+    letter-spacing: 3px;
+    margin-bottom: 12px;
+}
+
+.favorites__empty p {
+    font-size: 15px;
+    color: var(--color-grey-600);
+    margin-bottom: 28px;
+}
+
+.favorites__shop-btn {
+    padding: 13px 32px;
+    background-color: var(--color-black);
+    color: var(--color-white);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background var(--transition);
+}
+
+.favorites__shop-btn:hover {
+    background-color: #222;
+}

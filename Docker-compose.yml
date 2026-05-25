@@ -1,0 +1,119 @@
+version: '3.8'
+
+# =====================================================
+# STREETSHOP - DOCKER COMPOSE CONFIGURATION
+# =====================================================
+# Este archivo orquesta todos los servicios:
+# - PostgreSQL (Base de datos)
+# - Backend (Spring Boot)
+# - Frontend (React)
+# =====================================================
+
+services:
+  # ===================================================
+  # POSTGRESQL DATABASE
+  # ===================================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: streetshop-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # Scripts SQL - se ejecutan en orden alfabético
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
+      - ./database/data.sql:/docker-entrypoint-initdb.d/2-data.sql
+    networks:
+      - streetshop-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ===================================================
+  # SPRING BOOT BACKEND
+  # ===================================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: streetshop-backend
+    restart: unless-stopped
+    environment:
+      # Base de datos
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      
+      # JPA/Hibernate
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: true
+      
+      # Puerto
+      SERVER_PORT: 8080
+      
+      # APIs externas
+      STRIPE_API_KEY: ${STRIPE_API_KEY}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      
+      BREVO_API_KEY: ${BREVO_API_KEY}
+      
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
+      
+      # JWT
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: 86400000
+      
+      # CORS (permitir frontend)
+      CORS_ALLOWED_ORIGINS: http://localhost:3000
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - streetshop-network
+
+  # ===================================================
+  # REACT FRONTEND
+  # ===================================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: http://localhost:8080
+    container_name: streetshop-frontend
+    restart: unless-stopped
+    environment:
+      REACT_APP_API_URL: http://localhost:8080
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - streetshop-network
+    stdin_open: true
+    tty: true
+
+# =====================================================
+# NETWORKS
+# =====================================================
+networks:
+  streetshop-network:
+    driver: bridge
+
+# =====================================================
+# VOLUMES (Persistencia de datos)
+# =====================================================
+volumes:
+  postgres_data:
+    driver: local

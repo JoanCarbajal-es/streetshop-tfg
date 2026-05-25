@@ -1,0 +1,287 @@
+### ========================================
+### STREETSHOP API TESTS
+### ========================================
+
+GET http://localhost:8080/api/auth/test
+
+### Health Check
+GET http://localhost:8080/api/health
+
+### ========================================
+### CATEGORÍAS
+### ========================================
+
+### Listar todas las categorías
+GET http://localhost:8080/api/categories
+
+### Ver categoría por ID
+GET http://localhost:8080/api/categories/1
+
+### Ver categoría por slug
+GET http://localhost:8080/api/categories/slug/sneakers
+
+### ========================================
+### PRODUCTOS
+### ========================================
+
+### Listar todos los productos
+GET http://localhost:8080/api/products
+
+### Ver producto por ID
+GET http://localhost:8080/api/products/1
+
+### Buscar por marca
+GET http://localhost:8080/api/products/brand/Nike
+
+### Buscar por categoría
+GET http://localhost:8080/api/products/category/1
+
+### Buscar por nombre
+GET http://localhost:8080/api/products/search?name=jordan
+
+### ========================================
+### AUTENTICACIÓN
+### ========================================
+
+### Registro de usuario
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "joanAlonso@test.com",
+  "password": "123456",
+  "fullName": "Joan Alonso Carbajal Quispe",
+  "phone": "666555444",
+  "address": "Calle Falsa 123, Madrid"
+}
+
+### Login
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "joan@test.com",
+  "password": "123456"
+}
+
+### Registro de otro usuario
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "maria@test.com",
+  "password": "654321",
+  "fullName": "Maria Garcia",
+  "phone": "677888999",
+  "address": "Avenida Principal 456, Barcelona"
+}
+
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "123456",
+  "fullName": "Usuario Test",
+  "phone": "666777888",
+  "address": "Calle Test 123"
+}
+### ========================================
+### CARRITO
+### ========================================
+
+### Ver carrito
+GET http://localhost:8080/api/cart
+
+### Añadir producto al carrito
+POST http://localhost:8080/api/cart/add
+Content-Type: application/json
+
+{
+  "productId": 2,
+  "quantity": 1,
+  "size": "42"
+}
+
+### Actualizar cantidad
+PUT http://localhost:8080/api/cart/6?quantity=3
+
+### Eliminar producto del carrito
+DELETE http://localhost:8080/api/cart/1
+
+### Vaciar carrito
+DELETE http://localhost:8080/api/cart/clear
+
+### ========================================
+### PEDIDOS
+### ========================================
+
+### Crear pedido desde el carrito
+POST http://localhost:8080/api/orders
+Content-Type: application/json
+
+{
+  "shippingAddress": "Calle Ortega y Gasset 4, Madrid, 28001",
+  "phone": "666777888",
+  "paymentMethod": "STRIPE"
+}
+
+### Ver mis pedidos
+GET http://localhost:8080/api/orders
+
+### Ver detalle de un pedido
+GET http://localhost:8080/api/orders/1
+
+### ========================================
+### FAVORITOS
+### ========================================
+
+### Ver mis favoritos
+GET http://localhost:8080/api/favorites
+
+### Añadir producto a favoritos
+POST http://localhost:8080/api/favorites/1
+
+### Eliminar de favoritos
+DELETE http://localhost:8080/api/favorites/1
+
+### Verificar si un producto está en favoritos
+GET http://localhost:8080/api/favorites/check/1
+
+### ========================================
+### TALLAS Y STOCK
+### ========================================
+
+### Ver todas las tallas de un producto
+GET http://localhost:8080/api/products/1/sizes
+
+### Ver solo tallas con stock disponible
+GET http://localhost:8080/api/products/1/sizes/available
+
+### Ver stock de una talla específica
+GET http://localhost:8080/api/products/1/sizes/42
+
+### Actualizar stock de una talla (admin)
+PUT http://localhost:8080/api/products/1/sizes/42/stock?stock=50
+
+### ========================================
+### PAGOS (STRIPE)
+### ========================================
+
+### Crear Payment Intent
+POST http://localhost:8080/api/payments/create-intent
+Content-Type: application/json
+
+{
+  "amount": 150.00,
+  "currency": "eur"
+}
+
+### Verificar estado del pago
+GET http://localhost:8080/api/payments/verify/pi_xxxxxxxxxx
+
+### ========================================
+### ADMIN - PRODUCTOS
+### ========================================
+
+### Crear producto
+POST http://localhost:8080/api/admin/products
+Content-Type: application/json
+
+{
+  "name": "Nike Air Max 97",
+  "brand": "Nike",
+  "price": 180.00,
+  "categoryId": 1,
+  "description": "Zapatillas retro con diseño de onda",
+  "imageUrl": "https://via.placeholder.com/600"
+}
+
+### Actualizar producto
+PUT http://localhost:8080/api/admin/products/1
+Content-Type: application/json
+
+{
+  "name": "Air Jordan 1 Retro High OG 'Chicago' - ACTUALIZADO",
+  "brand": "Nike",
+  "price": 199.99,
+  "categoryId": 1,
+  "description": "Edición actualizada",
+  "imageUrl": "https://via.placeholder.com/600"
+}
+
+### Eliminar producto
+DELETE http://localhost:8080/api/admin/products/31
+
+### ========================================
+### ADMIN - CATEGORÍAS
+### ========================================
+
+### Crear categoría
+POST http://localhost:8080/api/admin/categories
+Content-Type: application/json
+
+{
+  "name": "Nuevas Llegadas",
+  "slug": "nuevas-llegadas"
+}
+
+### Actualizar categoría
+PUT http://localhost:8080/api/admin/categories/1
+Content-Type: application/json
+
+{
+  "name": "Sneakers Premium",
+  "slug": "sneakers-premium"
+}
+
+### Eliminar categoría
+DELETE http://localhost:8080/api/admin/categories/10
+
+### ========================================
+### ADMIN - PEDIDOS
+### ========================================
+
+### Ver todos los pedidos
+GET http://localhost:8080/api/admin/orders
+
+### Actualizar estado de pedido
+PUT http://localhost:8080/api/admin/orders/1/status?status=SHIPPED
+
+### ========================================
+### FACTURA PDF
+### ========================================
+
+### Descargar factura en PDF
+GET http://localhost:8080/api/orders/1/invoice
+
+
+#Probar envío de email de bienvenida
+GET http://localhost:8080//api/test/email/welcome?email=joanalonsocq@gmail.com&name=JoanALonsoCarbajalQuispe
+
+#Probar envío de email con PDF de prueba
+GET http://localhost:8080//api/test/email/pdf?email=joanalonsocq@gmail.com&name=JoanALonsoCarbajalQuispe
+
+#Probar envío de email simple
+GET http://localhost:8080//api/test/email/simple?email=joanalonsocq@gmail.com&name=JoanALonsoCarbajalQuispe
+
+#Información sobre los endpoints de prueba
+GET http://localhost:8080//api/test/email/info
+
+
+### ========================================
+### PRUEBAS DE FACTURACIÓN (PDF)
+### ========================================
+
+### 1. Descargar Factura (Caso Exitoso)
+# Verifica que el ID 1 corresponde a un pedido existente en tu BD
+GET http://localhost:8080/api/orders/1/invoice
+Accept: application/pdf
+
+### 2. Intentar descargar factura de un pedido inexistente
+# Debería devolver un error 500 con el mensaje "Pedido no encontrado"
+GET http://localhost:8080/api/orders/9999/invoice
+
+### 3. Probar envío de email con la factura adjunta
+# Este endpoint utiliza la lógica de generación de PDF para enviarlo por correo
+GET http://localhost:8080/api/test/email/pdf?email=joanalonsocq@gmail.com&name=JoanAlonsoCarbajalQuispe
