@@ -216,3 +216,52 @@
 .profile__shop-btn:hover {
     background-color: #222;
 }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .profile {
+        padding: 24px 16px 40px;
+    }
+
+    .profile__user-card,
+    .profile__orders {
+        padding: 24px 16px;
+    }
+
+    .order-card__header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .order-card__footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+    .order-card__invoice-btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile__name {
+        font-size: 28px;
+        letter-spacing: 2px;
+    }
+
+    .order-card {
+        padding: 16px;
+    }
+
+    .order-card__item {
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .order-card__total-amount {
+        font-size: 20px;
+    }
+}

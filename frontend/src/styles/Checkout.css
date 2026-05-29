@@ -65,7 +65,6 @@
     border-color: var(--color-black);
 }
 
-/* Métodos de Pago */
 .checkout-payment-methods {
     margin-top: 16px;
     padding: 16px;
@@ -186,7 +185,7 @@
     color: var(--color-black);
 }
 
-/* Responsive */
+/* ===== RESPONSIVE ===== */
 @media (max-width: 992px) {
     .checkout-content {
         grid-template-columns: 1fr;
@@ -195,5 +194,45 @@
     .checkout-summary-section {
         position: static;
         order: -1;
+    }
+}
+@media (max-width: 600px) {
+    .checkout-container {
+        padding: 24px 16px 40px;
+    }
+
+    .checkout-form-section {
+        padding: 20px 16px;
+    }
+
+    .checkout-summary-section {
+        padding: 20px 16px;
+    }
+
+    .checkout-title {
+        font-size: 28px;
+        letter-spacing: 2px;
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .checkout-summary-item {
+        gap: 10px;
+    }
+
+    .checkout-summary-image {
+        width: 56px;
+        height: 56px;
+    }
+
+    .checkout-total {
+        font-size: 17px;
+    }
+
+    .checkout-submit-btn {
+        font-size: 14px;
+        padding: 14px;
+        margin-top: 20px;
     }
 }

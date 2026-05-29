@@ -113,3 +113,31 @@ body::-webkit-scrollbar {
 .register__submit-btn:active {
     transform: scale(0.98);
 }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 480px) {
+    .login,
+    .register {
+        padding: 24px 16px;
+        align-items: flex-start;
+        padding-top: 40px;
+    }
+
+    .login__card,
+    .register__card {
+        padding: 28px 20px;
+    }
+
+    .login__title,
+    .register__title {
+        font-size: 1.5rem;
+        margin-bottom: 28px;
+    }
+}
+
+.login__logo {
+    width: 140px;
+    height: auto;
+    display: block;
+    margin: 0 auto 28px;
+}

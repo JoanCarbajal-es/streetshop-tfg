@@ -40,3 +40,10 @@ html {
 .footer {
     flex-shrink: 0;
 }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 480px) {
+    .app-wrapper {
+        overflow-x: hidden;
+    }
+}

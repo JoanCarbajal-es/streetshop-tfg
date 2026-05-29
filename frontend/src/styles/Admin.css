@@ -363,3 +363,57 @@
     flex-direction: column;
     gap: 8px;
 }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .admin {
+        padding: 24px 16px 40px;
+    }
+
+    .admin__card {
+        padding: 20px 16px;
+    }
+
+    .admin__row {
+        grid-template-columns: 1fr;
+    }
+
+    .admin__tabs {
+        gap: 4px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .admin__tab {
+        padding: 10px 14px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    .orders-admin__item {
+        padding: 16px;
+    }
+
+    .orders-admin__header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin__title {
+        font-size: 36px;
+        letter-spacing: 2px;
+    }
+
+    .admin__card-title {
+        font-size: 18px;
+    }
+
+    .admin__preview-grid,
+    .admin__existing-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    }
+}

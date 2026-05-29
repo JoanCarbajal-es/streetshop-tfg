@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { register as registerApi } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import logoFull from '../assets/logo-full.png';
 import '../styles/Register.css';
 
 function Register() {
@@ -33,6 +34,7 @@ function Register() {
     return (
         <div className="register">
             <div className="register__card">
+                <img src={logoFull} alt="StreetShop" className="register__logo" />
                 <h1 className="register__title">Crear Cuenta</h1>
 
                 {error && <div className="register__error">{error}</div>}

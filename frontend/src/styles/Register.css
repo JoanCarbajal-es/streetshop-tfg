@@ -47,3 +47,27 @@
     letter-spacing: 2px;
     cursor: pointer;
 }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 480px) {
+    .login, .register {
+        padding: 24px 16px;
+    }
+
+    .login__card, .register__card {
+        padding: 28px 16px;
+    }
+
+    .login__title, .register__title {
+        font-size: 1rem;
+        letter-spacing: 3px;
+        margin-bottom: 28px;
+    }
+}
+
+.register__logo {
+    width: 140px;
+    height: auto;
+    display: block;
+    margin: 0 auto 28px;
+}

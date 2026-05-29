@@ -103,3 +103,30 @@
 .favorites__shop-btn:hover {
     background-color: #222;
 }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .favorites__grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .favorites {
+        padding: 24px 16px 40px;
+    }
+
+    .favorites__header {
+        margin-bottom: 28px;
+    }
+
+    .favorites__grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .favorites__empty h2 {
+        font-size: 28px;
+    }
+}

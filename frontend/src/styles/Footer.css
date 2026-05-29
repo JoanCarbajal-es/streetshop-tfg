@@ -1,17 +1,38 @@
 .footer {
-    padding: 4rem 2rem;
+    padding: 3rem 2rem;
     background: var(--primary-black);
     color: white;
     text-align: center;
     margin-top: auto;
     border-top: 1px solid var(--border-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.footer__logo {
+    height: 40px;
+    width: auto;
+    filter: invert(1) brightness(0.7);
+    opacity: 0.6;
 }
 
 .footer p {
     text-transform: uppercase;
     font-size: 0.7rem;
     letter-spacing: 3px;
-    opacity: 0.7;
+    opacity: 0.5;
     margin: 0;
     font-weight: 500;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 480px) {
+    .footer {
+        padding: 2rem 1rem;
+    }
+    .footer__logo {
+        height: 32px;
+    }
 }

@@ -1,10 +1,12 @@
 import React from 'react';
+import logoIcon from '../assets/logo-icon.png';
 import '../styles/Footer.css';
 
 function Footer() {
     return (
         <footer className="footer">
-            <p>© 2025 StreetShop - Joan Carbajal Quispe</p>
+            <img src={logoIcon} alt="StreetShop" className="footer__logo" />
+            <p>© {new Date().getFullYear()} StreetShop — All rights reserved</p>
         </footer>
     );
 }

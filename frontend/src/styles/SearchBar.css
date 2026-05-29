@@ -126,3 +126,26 @@
     background-color: #fafafa;
     font-style: italic;
 }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .search-bar {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .search-bar__results {
+        max-height: 280px;
+    }
+
+    .search-bar__result-item {
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .search-bar__result-image {
+        width: 44px;
+        height: 44px;
+    }
+}

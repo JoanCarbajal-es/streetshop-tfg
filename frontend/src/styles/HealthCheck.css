@@ -90,3 +90,14 @@
     text-align: center;
     color: var(--color-grey-600);
 }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 480px) {
+    .healthcheck__card {
+        padding: 28px 20px;
+    }
+
+    .healthcheck__title {
+        font-size: 22px;
+    }
+}

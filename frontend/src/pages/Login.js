@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { login as loginApi } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import logoFull from '../assets/logo-full.png';
 import '../styles/Login.css';
 
 function Login() {
@@ -34,6 +35,7 @@ function Login() {
     return (
         <div className="login">
             <div className="login__card">
+                <img src={logoFull} alt="StreetShop" className="login__logo" />
                 <p className="login__eyebrow">Bienvenido a StreetShop</p>
                 <h1 className="login__title">Iniciar sesión</h1>
                 <p className="login__subtitle">Accede a tu cuenta para continuar con tu compra.</p>
