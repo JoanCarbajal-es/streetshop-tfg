@@ -1,37 +1,161 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { loadStripe } from '@stripe/stripe-js';
+import {
+    Elements,
+    PaymentElement,
+    useStripe,
+    useElements,
+} from '@stripe/react-stripe-js';
 import { getCart, createOrder, createPaymentIntent } from '../services/api';
 import '../styles/Checkout.css';
 
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
+
+
+function CheckoutForm({ cartItems, formData, handleChange, calculateTotal, onSuccess }) {
+    const stripe = useStripe();
+    const elements = useElements();
+    const [processing, setProcessing] = useState(false);
+    const [stripeError, setStripeError] = useState(null);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!formData.shippingAddress || !formData.phone) {
+            setStripeError('Por favor completa todos los campos de envío.');
+            return;
+        }
+
+        if (!stripe || !elements) return;
+
+        setProcessing(true);
+        setStripeError(null);
+
+        const { error, paymentIntent } = await stripe.confirmPayment({
+            elements,
+            redirect: 'if_required',
+        });
+
+        if (error) {
+            setStripeError(error.message);
+            setProcessing(false);
+            return;
+        }
+
+        if (paymentIntent.status !== 'succeeded') {
+            setStripeError('El pago no se pudo completar. Inténtalo de nuevo.');
+            setProcessing(false);
+            return;
+        }
+
+        try {
+            const orderResponse = await createOrder({
+                shippingAddress: formData.shippingAddress,
+                phone: formData.phone,
+                paymentMethod: 'STRIPE',
+                paymentIntentId: paymentIntent.id,
+            });
+            onSuccess(orderResponse.data.orderNumber);
+        } catch (err) {
+            setStripeError('Pago completado, pero hubo un error al crear el pedido: ' + (err.response?.data?.error || err.message));
+            setProcessing(false);
+        }
+    };
+
+    return (
+        <form onSubmit={handleSubmit}>
+            <h2 className="checkout-section-title">Datos de envío</h2>
+
+            <div className="checkout-form-group">
+                <label className="checkout-label">Dirección de envío *</label>
+                <textarea
+                    name="shippingAddress"
+                    value={formData.shippingAddress}
+                    onChange={handleChange}
+                    required
+                    className="checkout-input"
+                    style={{ minHeight: '100px' }}
+                    placeholder="Calle, número, piso, ciudad, código postal"
+                />
+            </div>
+
+            <div className="checkout-form-group">
+                <label className="checkout-label">Teléfono de contacto *</label>
+                <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    required
+                    className="checkout-input"
+                    placeholder="666 777 888"
+                />
+            </div>
+
+            <h2 className="checkout-section-title" style={{ marginTop: '32px' }}>Pago con tarjeta</h2>
+
+            <div className="checkout-stripe-element">
+                <PaymentElement />
+            </div>
+
+            {stripeError && (
+                <div className="checkout-stripe-error">
+                    ⚠️ {stripeError}
+                </div>
+            )}
+
+            <button
+                type="submit"
+                disabled={processing || !stripe}
+                className="checkout-submit-btn"
+            >
+                {processing ? 'Procesando...' : `Pagar ${calculateTotal()} €`}
+            </button>
+
+            <p className="checkout-note">
+                Al realizar el pedido, aceptas nuestras condiciones de venta y política de privacidad.
+            </p>
+        </form>
+    );
+}
+
 function Checkout() {
     const navigate = useNavigate();
-    
+
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [processing, setProcessing] = useState(false);
+    const [clientSecret, setClientSecret] = useState(null);
     const [formData, setFormData] = useState({
         shippingAddress: '',
         phone: '',
-        paymentMethod: 'STRIPE'
     });
 
     useEffect(() => {
-        loadCart();
+        loadCartAndCreateIntent();
     }, []);
 
-    const loadCart = async () => {
+    const loadCartAndCreateIntent = async () => {
         try {
-            setLoading(true); // Asegúrate de que empiece en true
             const response = await getCart();
             const items = response.data;
-            
-            setCartItems(items);
-            setLoading(false);
-            
+
             if (items.length === 0) {
                 alert('Tu carrito está vacío');
                 navigate('/cart');
+                return;
             }
+
+            setCartItems(items);
+
+            // Crear el PaymentIntent en cuanto cargamos el carrito
+            const total = items
+                .reduce((sum, item) => sum + parseFloat(item.subtotal), 0)
+                .toFixed(2);
+
+            const paymentResponse = await createPaymentIntent(parseFloat(total));
+            setClientSecret(paymentResponse.data.clientSecret);
+            setLoading(false);
         } catch (err) {
             console.error(err);
             alert('Error cargando el carrito');
@@ -44,128 +168,60 @@ function Checkout() {
     };
 
     const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
+        setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        
-        if (!formData.shippingAddress || !formData.phone) {
-            alert('Por favor completa todos los campos');
-            return;
-        }
-
-        setProcessing(true);
-
-        try {
-            // 1. Crear Payment Intent en Stripe
-            const total = parseFloat(calculateTotal());
-            const paymentResponse = await createPaymentIntent(total);
-            
-            // 2. Simulación de pago
-            alert('💳 Procesando pago...\n(En producción aquí iría el formulario de Stripe)');
-
-            // 3. Crear el pedido
-            const orderResponse = await createOrder({
-                shippingAddress: formData.shippingAddress,
-                phone: formData.phone,
-                paymentMethod: formData.paymentMethod
-            });
-
-            alert('✅ ¡Pedido realizado con éxito!\n\nPedido #' + orderResponse.data.orderNumber);
-            
-            // 4. Redirigir al perfil
-            navigate('/profile');
-
-        } catch (err) {
-            alert('❌ Error procesando el pedido: ' + (err.response?.data?.error || err.message));
-            setProcessing(false);
-        }
+    const handleSuccess = (orderNumber) => {
+        navigate('/profile', {
+            state: { successMessage: `✅ ¡Pedido #${orderNumber} realizado con éxito!` },
+        });
     };
 
     if (loading) {
         return <div className="cart__loading">Cargando pedido...</div>;
     }
 
+    const stripeOptions = {
+        clientSecret,
+        appearance: {
+            theme: 'stripe',
+            variables: {
+                colorPrimary: '#0a0a0a',
+                colorBackground: '#ffffff',
+                colorText: '#0a0a0a',
+                colorDanger: '#ff3b3b',
+                fontFamily: 'DM Sans, sans-serif',
+                borderRadius: '6px',
+                spacingUnit: '4px',
+            },
+        },
+    };
+
     return (
         <div className="checkout-container">
             <h1 className="checkout-title">💳 Finalizar Compra</h1>
 
             <div className="checkout-content">
-                {/* Columna Izquierda: Formulario */}
                 <div className="checkout-form-section">
-                    <form onSubmit={handleSubmit}>
-                        <h2 className="checkout-section-title">Datos de envío</h2>
-
-                        <div className="checkout-form-group">
-                            <label className="checkout-label">Dirección de envío *</label>
-                            <textarea
-                                name="shippingAddress"
-                                value={formData.shippingAddress}
-                                onChange={handleChange}
-                                required
-                                className="checkout-input"
-                                style={{ minHeight: '100px' }}
-                                placeholder="Calle, número, piso, ciudad, código postal"
-                            />
-                        </div>
-
-                        <div className="checkout-form-group">
-                            <label className="checkout-label">Teléfono de contacto *</label>
-                            <input
-                                type="tel"
-                                name="phone"
-                                value={formData.phone}
-                                onChange={handleChange}
-                                required
-                                className="checkout-input"
-                                placeholder="666 777 888"
-                            />
-                        </div>
-
-                        <h2 className="checkout-section-title">Método de pago</h2>
-
-                        <div className="checkout-payment-methods">
-                            <label className="checkout-payment-option">
-                                <input
-                                    type="radio"
-                                    name="paymentMethod"
-                                    value="STRIPE"
-                                    checked={formData.paymentMethod === 'STRIPE'}
-                                    onChange={handleChange}
-                                />
-                                <span className="checkout-payment-label">
-                                    💳 Tarjeta de crédito/débito (Stripe)
-                                </span>
-                            </label>
-                        </div>
-
-                        <button 
-                            type="submit" 
-                            disabled={processing}
-                            className="checkout-submit-btn"
-                        >
-                            {processing ? 'Procesando...' : `Pagar ${calculateTotal()} €`}
-                        </button>
-
-                        <p className="checkout-note">
-                            Al realizar el pedido, aceptas nuestras condiciones de venta y política de privacidad.
-                        </p>
-                    </form>
+                    <Elements stripe={stripePromise} options={stripeOptions}>
+                        <CheckoutForm
+                            cartItems={cartItems}
+                            formData={formData}
+                            handleChange={handleChange}
+                            calculateTotal={calculateTotal}
+                            onSuccess={handleSuccess}
+                        />
+                    </Elements>
                 </div>
 
-                {/* Columna Derecha: Resumen del pedido */}
                 <div className="checkout-summary-section">
                     <h2 className="checkout-section-title">Resumen</h2>
 
                     <div className="checkout-items-list">
                         {cartItems.map(item => (
                             <div key={item.id} className="checkout-summary-item">
-                                <img 
-                                    src={item.productImage} 
+                                <img
+                                    src={item.productImage}
                                     alt={item.productName}
                                     className="checkout-summary-image"
                                 />

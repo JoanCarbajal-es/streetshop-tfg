@@ -185,6 +185,25 @@
     color: var(--color-black);
 }
 
+.checkout-stripe-element {
+    margin-top: 16px;
+    padding: 20px;
+    background-color: var(--color-grey-100);
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--color-grey-200);
+}
+
+.checkout-stripe-error {
+    margin-top: 16px;
+    padding: 12px 16px;
+    background-color: #fff0f0;
+    border: 1.5px solid var(--color-danger);
+    border-radius: var(--radius-sm);
+    color: var(--color-danger);
+    font-size: 14px;
+    font-weight: 500;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 992px) {
     .checkout-content {
