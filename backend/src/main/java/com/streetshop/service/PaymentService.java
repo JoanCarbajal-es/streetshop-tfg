@@ -33,11 +33,8 @@ public class PaymentService {
         PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
                 .setAmount(amountInCents)
                 .setCurrency(currency)
-                .setAutomaticPaymentMethods(
-                    PaymentIntentCreateParams.AutomaticPaymentMethods.builder()
-                        .setEnabled(true)
-                        .build()
-                )
+                .addPaymentMethodType("card")
+                .addPaymentMethodType("klarna")
                 .build();
 
         PaymentIntent paymentIntent = PaymentIntent.create(params);

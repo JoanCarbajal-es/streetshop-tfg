@@ -7,7 +7,7 @@ import com.streetshop.service.InvoiceService;
 import com.streetshop.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication; // Necesario
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -24,7 +24,6 @@ public class OrderController {
     @Autowired
     private InvoiceService invoiceService;
 
-    // MÉTODO CLAVE: Extrae el ID del usuario autenticado por el filtro
     private Long getCurrentUserId(Authentication authentication) {
         if (authentication == null) {
             throw new RuntimeException("Usuario no autenticado");

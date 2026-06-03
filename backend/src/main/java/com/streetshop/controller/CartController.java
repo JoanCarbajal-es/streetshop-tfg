@@ -25,9 +25,7 @@ public class CartController {
 
     private Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         User user = (User) authentication.getPrincipal();
-
         return user.getId();
     }
 
