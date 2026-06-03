@@ -8,12 +8,12 @@ import {
     useElements,
 } from '@stripe/react-stripe-js';
 import { getCart, createOrder, createPaymentIntent } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 import '../styles/Checkout.css';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
-
-function CheckoutForm({ cartItems, formData, handleChange, calculateTotal, onSuccess }) {
+function CheckoutForm({ cartItems, formData, handleChange, calculateTotal, onSuccess, userEmail }) {
     const stripe = useStripe();
     const elements = useElements();
     const [processing, setProcessing] = useState(false);
@@ -93,10 +93,18 @@ function CheckoutForm({ cartItems, formData, handleChange, calculateTotal, onSuc
                 />
             </div>
 
-            <h2 className="checkout-section-title" style={{ marginTop: '32px' }}>Pago con tarjeta</h2>
+            <h2 className="checkout-section-title" style={{ marginTop: '32px' }}>Método de pago</h2>
 
             <div className="checkout-stripe-element">
-                <PaymentElement />
+                <PaymentElement
+                    options={{
+                        layout: 'tabs',
+                        wallets: {
+                            googlePay: 'auto',
+                            applePay: 'auto',
+                        },
+                    }}
+                />
             </div>
 
             {stripeError && (
@@ -148,7 +156,6 @@ function Checkout() {
 
             setCartItems(items);
 
-            // Crear el PaymentIntent en cuanto cargamos el carrito
             const total = items
                 .reduce((sum, item) => sum + parseFloat(item.subtotal), 0)
                 .toFixed(2);

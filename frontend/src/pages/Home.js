@@ -34,6 +34,9 @@ function Home() {
         }
     };
 
+    const ROPA_SUBCATEGORY_IDS = [4, 5, 6, 7];
+    const ROPA_CATEGORY_ID = 2;
+
     const filterByCategory = (categoryId) => {
         setSelectedCategory(categoryId);
         setCurrentPage(1);
@@ -44,19 +47,18 @@ function Home() {
         setCurrentPage(1);
     };
 
-    // Filtrar por categoría
     let filteredProducts = selectedCategory
-        ? products.filter(p => p.categoryId === selectedCategory)
+        ? selectedCategory === ROPA_CATEGORY_ID
+            ? products.filter(p => ROPA_SUBCATEGORY_IDS.includes(p.categoryId))
+            : products.filter(p => p.categoryId === selectedCategory)
         : products;
 
-    // Ordenar
     if (sortBy === 'price-asc') {
         filteredProducts = [...filteredProducts].sort((a, b) => a.price - b.price);
     } else if (sortBy === 'price-desc') {
         filteredProducts = [...filteredProducts].sort((a, b) => b.price - a.price);
     }
 
-    // Paginación
     const indexOfLastProduct = currentPage * productsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
     const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
@@ -72,7 +74,6 @@ function Home() {
                 <p className="home__subtitle">Descubre nuestra colección de streetwear y sneakers</p>
             </div>
 
-            {/* Controles: filtros y ordenamiento */}
             <div className="home__controls">
                 <div className="home__filters">
                     <button
@@ -82,7 +83,9 @@ function Home() {
                         Todos ({products.length})
                     </button>
                     {categories.map(cat => {
-                        const count = products.filter(p => p.categoryId === cat.id).length;
+                        const count = cat.id === ROPA_CATEGORY_ID
+                            ? products.filter(p => ROPA_SUBCATEGORY_IDS.includes(p.categoryId)).length
+                            : products.filter(p => p.categoryId === cat.id).length;
                         return (
                             <button
                                 key={cat.id}
@@ -108,7 +111,6 @@ function Home() {
                 </div>
             </div>
 
-            {/* Grid de productos */}
             <div className="home__grid">
                 {currentProducts.map(product => (
                     <ProductCard key={product.id} product={product} />

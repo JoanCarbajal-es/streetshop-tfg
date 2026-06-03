@@ -10,7 +10,7 @@ const api = axios.create({
     },
 });
 
-// Interceptor para añadir token JWT a todas las peticiones
+// Interceptor de REQUEST: añadir token JWT a todas las peticiones
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
@@ -19,7 +19,19 @@ api.interceptors.request.use(
         }
         return config;
     },
+    (error) => Promise.reject(error)
+);
+
+// Interceptor de RESPONSE: detectar token caducado (401) y hacer logout automático
+api.interceptors.response.use(
+    (response) => response,
     (error) => {
+        if (error.response?.status === 401) {
+            // Token caducado o inválido — limpiar sesión y redirigir al login
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+        }
         return Promise.reject(error);
     }
 );
