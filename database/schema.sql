@@ -6,12 +6,6 @@
 -- Proyecto: TFG - Desarrollo de Aplicaciones Web
 -- =====================================================
 
--- Eliminar tablas si existen (para testing)
-DROP TABLE IF EXISTS product_images CASCADE;
-DROP TABLE IF EXISTS product_sizes CASCADE;
-DROP TABLE IF EXISTS products CASCADE;
-DROP TABLE IF EXISTS categories CASCADE;
-
 -- =====================================================
 -- TABLA: CATEGORIES
 -- =====================================================
@@ -48,7 +42,7 @@ CREATE TABLE product_images (
     display_order INTEGER DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
--- Imágenes para cada producto (3-4 imágenes por producto)
+-- Imágenes para cada producto
 
 -- =====================================================
 -- TABLA: PRODUCT_SIZES

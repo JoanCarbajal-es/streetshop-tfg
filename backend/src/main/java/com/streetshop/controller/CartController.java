@@ -23,8 +23,6 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
-    // TODO: Cuando implementes autenticación JWT, obtén el userId del token
-    // Por ahora usamos un userId fijo para pruebas
     private Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
