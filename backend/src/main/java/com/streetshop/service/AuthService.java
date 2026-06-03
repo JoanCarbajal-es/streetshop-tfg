@@ -26,7 +26,7 @@ public class AuthService {
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public AuthResponse register(RegisterRequest request) {
-        System.out.println("🔵 INICIO DE REGISTRO - Email: " + request.getEmail());
+        System.out.println("INICIO DE REGISTRO - Email: " + request.getEmail());
         
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("El email ya está registrado");
@@ -42,15 +42,14 @@ public class AuthService {
         user.setCreatedAt(LocalDateTime.now());
 
         User savedUser = userRepository.save(user);
-        System.out.println("🟢 Usuario guardado - ID: " + savedUser.getId());
+        System.out.println("Usuario guardado - ID: " + savedUser.getId());
         
-        // Enviar email de bienvenida
         try {
-            System.out.println("📧 Intentando enviar email de bienvenida a: " + savedUser.getEmail());
+            System.out.println("Intentando enviar email de bienvenida a: " + savedUser.getEmail());
             brevoEmailService.sendWelcomeEmail(savedUser.getEmail(), savedUser.getFullName());
-            System.out.println("✅ Email de bienvenida enviado correctamente");
+            System.out.println("Email de bienvenida enviado correctamente");
         } catch (Exception e) {
-            System.err.println("❌ Error enviando email de bienvenida: " + e.getMessage());
+            System.err.println("Error enviando email de bienvenida: " + e.getMessage());
             e.printStackTrace();
         }
 

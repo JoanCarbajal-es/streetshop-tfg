@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { getCart, updateCartItem, removeFromCart, clearCart } from '../services/api';
+import { useCart } from '../context/CartContext';
 import '../styles/Cart.css';
 
 function Cart() {
@@ -17,6 +18,7 @@ function Cart() {
     };
 
     const [cartItems, setCartItems] = useState([]);
+    const { refreshCart } = useCart();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -40,6 +42,7 @@ function Cart() {
         try {
             await updateCartItem(itemId, newQuantity);
             loadCart();
+            refreshCart();
         } catch (err) {
             alert('Error actualizando cantidad');
             console.error(err);
@@ -51,6 +54,7 @@ function Cart() {
         try {
             await removeFromCart(itemId);
             loadCart();
+            refreshCart();
         } catch (err) {
             alert('Error eliminando producto');
             console.error(err);
@@ -62,6 +66,7 @@ function Cart() {
         try {
             await clearCart();
             loadCart();
+            refreshCart();
         } catch (err) {
             alert('Error vaciando el carrito');
             console.error(err);

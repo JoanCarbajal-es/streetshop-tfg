@@ -39,12 +39,11 @@ public class OrderService {
 
     @Transactional
     public OrderResponse createOrder(Long userId, CreateOrderRequest request) {
-        System.out.println("🔵 INICIO DE CREACIÓN DE PEDIDO - Usuario ID: " + userId);
+        System.out.println("INICIO DE CREACIÓN DE PEDIDO - Usuario ID: " + userId);
     
         List<CartItemResponse> cartItems = cartService.getCartItems(userId);
         
-        // AÑADE ESTA LÍNEA PARA DEPURAR:
-        System.out.println("📦 Cantidad de productos encontrados en DB: " + cartItems.size());
+        System.out.println("Cantidad de productos encontrados en DB: " + cartItems.size());
         
         if (cartItems.isEmpty()) {
             throw new RuntimeException("El carrito está vacío");
@@ -65,7 +64,7 @@ public class OrderService {
         order.setCreatedAt(LocalDateTime.now());
         
         Order savedOrder = orderRepository.save(order);
-        System.out.println("🟢 Pedido guardado - Número: " + savedOrder.getOrderNumber());
+        System.out.println("Pedido guardado - Número: " + savedOrder.getOrderNumber());
 
         List<OrderItem> orderItems = cartItems.stream().map(cartItem -> {
             OrderItem item = new OrderItem();
@@ -83,7 +82,6 @@ public class OrderService {
         orderItemRepository.saveAll(orderItems);
         cartService.clearCart(userId);
 
-        // Lógica de envío de Email Dinámico
         try {
             User user = userRepository.findById(userId).orElse(null);
             if (user != null) {
@@ -94,10 +92,10 @@ public class OrderService {
                     savedOrder,
                     orderItems
                 );
-                System.out.println("✅ Email de confirmación de pedido enviado correctamente");
+                System.out.println("Email de confirmación de pedido enviado correctamente");
             }
         } catch (Exception e) {
-            System.err.println("❌ Error enviando email de confirmación: " + e.getMessage());
+            System.err.println("Error enviando email de confirmación: " + e.getMessage());
         }
 
         OrderResponse response = new OrderResponse();

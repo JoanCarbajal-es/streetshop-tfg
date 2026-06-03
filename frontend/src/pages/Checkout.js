@@ -9,6 +9,7 @@ import {
 } from '@stripe/react-stripe-js';
 import { getCart, createOrder, createPaymentIntent } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 import '../styles/Checkout.css';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
@@ -95,6 +96,7 @@ function CheckoutForm({ cartItems, formData, handleChange, calculateTotal, onSuc
 
             <h2 className="checkout-section-title" style={{ marginTop: '32px' }}>Método de pago</h2>
 
+            {/* PaymentElement muestra automáticamente: tarjeta, Google Pay, Apple Pay y Klarna */}
             <div className="checkout-stripe-element">
                 <PaymentElement
                     options={{
@@ -102,6 +104,11 @@ function CheckoutForm({ cartItems, formData, handleChange, calculateTotal, onSuc
                         wallets: {
                             googlePay: 'auto',
                             applePay: 'auto',
+                        },
+                        defaultValues: {
+                            billingDetails: {
+                                email: userEmail || '',  // ← precarga el email del usuario logueado
+                            },
                         },
                     }}
                 />
@@ -130,6 +137,8 @@ function CheckoutForm({ cartItems, formData, handleChange, calculateTotal, onSuc
 
 function Checkout() {
     const navigate = useNavigate();
+    const { user } = useAuth();
+    const { refreshCart } = useCart();
 
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -179,6 +188,7 @@ function Checkout() {
     };
 
     const handleSuccess = (orderNumber) => {
+        refreshCart();
         navigate('/profile', {
             state: { successMessage: `✅ ¡Pedido #${orderNumber} realizado con éxito!` },
         });
@@ -217,6 +227,7 @@ function Checkout() {
                             handleChange={handleChange}
                             calculateTotal={calculateTotal}
                             onSuccess={handleSuccess}
+                            userEmail={user?.email}
                         />
                     </Elements>
                 </div>

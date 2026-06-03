@@ -12,35 +12,36 @@ import Profile from './pages/Profile';
 import Favorites from './pages/Favorites';
 import Checkout from './pages/Checkout';
 import Admin from './pages/Admin';
+import { CartProvider } from './context/CartContext';
 import './styles/global.css';
 import './styles/App.css';
 
 function App() {
     return (
         <Router>
-            <div className="app-wrapper">
-                <Navbar />
-
-                <main className="app-main">
-                    <Routes>
-                        <Route path="/"            element={<Home />} />
-                        <Route path="/product/:id" element={<ProductDetail />} />
-                        <Route path="/cart"        element={<Cart />} />
-                        <Route path="/login"       element={<Login />} />
-                        <Route path="/register"    element={<Register />} />
-                        <Route path="/profile"     element={<Profile />} />
-                        <Route path="/favorites"   element={<Favorites />} />
-                        <Route path="/checkout"    element={<Checkout />} />
-                        <Route path="/admin" element={
-                            <AdminRoute>
-                                <Admin />
-                            </AdminRoute>
-                        } />
-                    </Routes>
-                </main>
-
-                <Footer />
-            </div>
+            <CartProvider>
+                <div className="app-wrapper">
+                    <Navbar />
+                    <main className="app-main">
+                        <Routes>
+                            <Route path="/"            element={<Home />} />
+                            <Route path="/product/:id" element={<ProductDetail />} />
+                            <Route path="/cart"        element={<Cart />} />
+                            <Route path="/login"       element={<Login />} />
+                            <Route path="/register"    element={<Register />} />
+                            <Route path="/profile"     element={<Profile />} />
+                            <Route path="/favorites"   element={<Favorites />} />
+                            <Route path="/checkout"    element={<Checkout />} />
+                            <Route path="/admin" element={
+                                <AdminRoute>
+                                    <Admin />
+                                </AdminRoute>
+                            } />
+                        </Routes>
+                    </main>
+                    <Footer />
+                </div>
+            </CartProvider>
         </Router>
     );
 }

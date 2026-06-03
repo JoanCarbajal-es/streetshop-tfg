@@ -1,5 +1,6 @@
 package com.streetshop.service;
 
+import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.draw.SolidLine;
@@ -7,12 +8,14 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.borders.SolidBorder;
 import com.itextpdf.layout.element.*;
+import com.itextpdf.layout.properties.UnitValue;
 import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.streetshop.model.Order;
 import com.streetshop.model.OrderItem;
 import com.streetshop.model.User;
 import com.streetshop.repository.OrderItemRepository;
+import com.streetshop.repository.UserRepository;
 import com.streetshop.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,12 +33,17 @@ public class InvoiceService {
         @Autowired
         private OrderItemRepository orderItemRepository;
 
+        @Autowired
+        private UserRepository userRepository;
+
         public byte[] generateInvoicePDF(Long orderId) {
                 Order order = orderRepository.findById(orderId)
                                 .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
 
                 List<OrderItem> items = orderItemRepository.findByOrderId(orderId);
-                User user = order.getUser();
+                User user = order.getUserId() != null
+                        ? userRepository.findById(order.getUserId()).orElse(null)
+                        : null;
 
                 try {
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -44,8 +52,12 @@ public class InvoiceService {
                         Document document = new Document(pdf);
                         document.setMargins(30, 45, 30, 45);
 
-                        document.add(new Paragraph("StreetShop").setFontSize(28).setBold()
-                                        .setTextAlignment(TextAlignment.CENTER));
+                        com.itextpdf.layout.element.Image logo = new com.itextpdf.layout.element.Image(
+                                ImageDataFactory.create(java.net.URI.create("https://res.cloudinary.com/dpsfipegh/image/upload/v1780400949/logo-full_wugz06.png").toURL()))
+                                .setWidth(UnitValue.createPercentValue(40))
+                                .setHorizontalAlignment(com.itextpdf.layout.properties.HorizontalAlignment.CENTER)
+                                .setMarginBottom(10);
+                        document.add(logo);
                         document.add(new LineSeparator(new SolidLine(0.5f)).setMarginBottom(20));
 
                         Table headTable = new Table(new float[] { 1, 1 }).useAllAvailableWidth()
@@ -105,7 +117,8 @@ public class InvoiceService {
                         document.close();
                         return baos.toByteArray();
                 } catch (Exception e) {
-                        throw new RuntimeException("Error: " + e.getMessage());
+                        e.printStackTrace();
+                        throw new RuntimeException("Error generando PDF: " + e.getClass().getName() + " - " + e.getMessage());
                 }
         }
 }

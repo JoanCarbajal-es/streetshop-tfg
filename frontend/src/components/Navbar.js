@@ -1,23 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getCart } from '../services/api';
 import { Icon } from '@iconify/react';
 import SearchBar from './SearchBar';
 import logoIcon from '../assets/logo-icon.png';
+import { useCart } from '../context/CartContext';
 import '../styles/Navbar.css';
 
 function Navbar() {
     const { user, isAuthenticated, logout } = useAuth();
+    const { cartCount } = useCart();
     const navigate = useNavigate();
-    const [cartCount, setCartCount] = useState(0);
     const [menuOpen, setMenuOpen] = useState(false);
-
-    useEffect(() => {
-        if (isAuthenticated()) {
-            loadCartCount();
-        }
-    }, [isAuthenticated]);
 
     useEffect(() => {
         if (menuOpen) setMenuOpen(false);
@@ -28,19 +22,9 @@ function Navbar() {
         return () => document.body.classList.remove('menu-open');
     }, [menuOpen]);
 
-    const loadCartCount = async () => {
-        try {
-            const response = await getCart();
-            const totalItems = response.data.reduce((sum, item) => sum + item.quantity, 0);
-            setCartCount(totalItems);
-        } catch (err) {
-            console.error('Error cargando carrito:', err);
-        }
-    };
 
     const handleLogout = () => {
         logout();
-        setCartCount(0);
         setMenuOpen(false);
         localStorage.removeItem('token');
         localStorage.removeItem('user');

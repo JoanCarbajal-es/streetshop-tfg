@@ -50,17 +50,14 @@ public class CartService {
         Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
-        // Verificar si ya existe el mismo producto con la misma talla
         var existingItem = cartItemRepository.findByUserIdAndProductIdAndSize(
                 userId, request.getProductId(), request.getSize());
 
         if (existingItem.isPresent()) {
-            // Actualizar cantidad
             CartItem item = existingItem.get();
             item.setQuantity(item.getQuantity() + request.getQuantity());
             return cartItemRepository.save(item);
         } else {
-            // Crear nuevo item
             CartItem newItem = new CartItem();
             newItem.setUserId(userId);
             newItem.setProductId(request.getProductId());

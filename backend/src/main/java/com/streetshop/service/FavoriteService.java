@@ -31,11 +31,9 @@ public class FavoriteService {
     }
 
     public Favorite addFavorite(Long userId, Long productId) {
-        // Verificar que el producto existe
         productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
-        // Verificar si ya está en favoritos
         if (favoriteRepository.existsByUserIdAndProductId(userId, productId)) {
             throw new RuntimeException("El producto ya está en favoritos");
         }

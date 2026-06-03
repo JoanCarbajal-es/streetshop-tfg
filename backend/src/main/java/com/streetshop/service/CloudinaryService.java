@@ -18,8 +18,8 @@ public class CloudinaryService {
     /**
      * Sube una imagen a Cloudinary y devuelve la URL segura.
      *
-     * @param file  Archivo recibido desde el frontend
-     * @return      URL pública de la imagen subida
+     * @param file
+     * @return
      */
     public String uploadImage(MultipartFile file) throws IOException {
         Map<?, ?> result = cloudinary.uploader().upload(
@@ -36,7 +36,7 @@ public class CloudinaryService {
     /**
      * Elimina una imagen de Cloudinary por su public_id.
      *
-     * @param publicId  El public_id de la imagen (sin extensión)
+     * @param publicId
      */
     public void deleteImage(String publicId) throws IOException {
         cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());

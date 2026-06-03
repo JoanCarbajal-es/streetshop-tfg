@@ -2,11 +2,13 @@ package com.streetshop.service;
 
 import com.streetshop.model.Order;
 import com.streetshop.model.OrderItem;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +21,9 @@ public class BrevoEmailService {
 
     @Value("${app.frontend.url:http://localhost:3000}")
     private String frontendUrl;
+
+    @Autowired
+    private InvoiceService invoiceService;
 
     private final String BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
     private final RestTemplate restTemplate = new RestTemplate();
@@ -59,6 +64,19 @@ public class BrevoEmailService {
 
             emailData.put("subject", "Confirmación de pedido #" + order.getOrderNumber());
             emailData.put("htmlContent", buildOrderConfirmationHtml(userName, order, items));
+
+            // Adjuntar factura PDF
+            try {
+                byte[] pdfBytes = invoiceService.generateInvoicePDF(order.getId());
+                String base64Pdf = Base64.getEncoder().encodeToString(pdfBytes);
+                List<Map<String, String>> attachments = List.of(Map.of(
+                    "name", "factura-" + order.getOrderNumber() + ".pdf",
+                    "content", base64Pdf
+                ));
+                emailData.put("attachment", attachments);
+            } catch (Exception e) {
+                System.err.println("No se pudo adjuntar la factura: " + e.getMessage());
+            }
 
             sendEmail(emailData);
 
@@ -172,7 +190,7 @@ public class BrevoEmailService {
                         <div class="header">
                             <img src="https://res.cloudinary.com/dpsfipegh/image/upload/v1780400949/logo-full_wugz06.png"
                                 alt="StreetShop" style="height: 80px; width: auto; display: block; margin: 0 auto 12px auto;" />
-                            <h1>✅ Pedido Confirmado</h1>
+                            <h1>Pedido Confirmado</h1>
                         </div>
                         <div class="content">
                             <h2>¡Gracias por tu compra, %s!</h2>
@@ -205,7 +223,6 @@ public class BrevoEmailService {
                                 TOTAL: %.2f €
                             </div>
 
-                            <p>Puedes descargar tu factura desde tu perfil en cualquier momento.</p>
                             <a href="%s/profile" class="button">Ver mis pedidos</a>
                         </div>
                         <div class="footer">

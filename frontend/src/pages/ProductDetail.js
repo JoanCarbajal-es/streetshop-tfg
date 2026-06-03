@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getProductById, getProductSizes, addToCart, addToFavorites, removeFromFavorites, checkFavorite} from '../services/api';
+import { useCart } from '../context/CartContext';
 import '../styles/ProductDetail.css';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
@@ -88,11 +89,14 @@ function ProductDetail() {
         }
     };
 
+    const { refreshCart } = useCart();
+
     const handleAddToCart = async () => {
         if (!selectedSize) { alert('Por favor selecciona una talla'); return; }
         try {
             setAddingToCart(true);
             await addToCart({ productId: parseInt(id), quantity, size: selectedSize });
+            refreshCart();
             alert('✅ Producto añadido al carrito');
         } catch (err) {
             alert('❌ Error añadiendo al carrito');

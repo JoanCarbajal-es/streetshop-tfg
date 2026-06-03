@@ -75,8 +75,10 @@ public class OrderController {
                     .header("Content-Type", "application/pdf")
                     .header("Content-Disposition", "attachment; filename=factura-" + orderId + ".pdf")
                     .body(pdfBytes);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(null);
+        } catch (Exception e) {
+            System.err.println("ERROR generando factura: " + e.getClass().getName() + " - " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(null);
         }
     }
 }
