@@ -29,10 +29,9 @@ public class SecurityConfig {
                 .requestMatchers("/api/products/**").permitAll()
                 .requestMatchers("/api/categories/**").permitAll()
                 .requestMatchers("/api/health").permitAll()
-                // Lo demás requiere autenticación
+                // Rutas que requieren autenticación
                 .anyRequest().authenticated()
             )
-            // Registrar el filtro JWT antes del filtro de autenticación estándar
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
