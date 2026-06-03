@@ -28,26 +28,33 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        
+
         final String authHeader = request.getHeader("Authorization");
 
-        // Si no hay cabecera Authorization o no empieza por Bearer, ignorar
+        // Si no hay cabecera Authorization o no empieza por Bearer, continuar sin autenticar
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         String token = authHeader.substring(7);
-        String email = jwtUtil.getEmailFromToken(token); // Extrae el email usando tu JwtUtil
+
+        // Si el token es inválido o ha caducado, devolver 401 directamente
+        if (!jwtUtil.validateToken(token)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"Token caducado o inválido. Por favor inicia sesión de nuevo.\"}");
+            return;
+        }
+
+        String email = jwtUtil.getEmailFromToken(token);
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             User user = userRepository.findByEmail(email).orElse(null);
 
-            // Si el usuario existe y el token es válido, autenticar en el contexto de Spring
-            if (user != null && jwtUtil.validateToken(token)) {
+            if (user != null) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     user, null, new java.util.ArrayList<>());
-                
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }

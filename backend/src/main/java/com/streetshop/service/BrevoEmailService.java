@@ -17,6 +17,9 @@ public class BrevoEmailService {
     @Value("${brevo.api.key}")
     private String brevoApiKey;
 
+    @Value("${app.frontend.url:http://localhost:3000}")
+    private String frontendUrl;
+
     private final String BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
     private final RestTemplate restTemplate = new RestTemplate();
 
@@ -24,17 +27,14 @@ public class BrevoEmailService {
         try {
             Map<String, Object> emailData = new HashMap<>();
 
-            // Remitente
             Map<String, String> sender = new HashMap<>();
             sender.put("name", "StreetShop");
             sender.put("email", "noreply.streetshop@gmail.com");
             emailData.put("sender", sender);
 
-            // Destinatario
             List<Map<String, String>> to = List.of(Map.of("email", toEmail, "name", userName));
             emailData.put("to", to);
 
-            // Asunto y contenido
             emailData.put("subject", "¡Bienvenido a StreetShop!");
             emailData.put("htmlContent", buildWelcomeEmailHtml(userName));
 
@@ -49,17 +49,14 @@ public class BrevoEmailService {
         try {
             Map<String, Object> emailData = new HashMap<>();
 
-            // Remitente
             Map<String, String> sender = new HashMap<>();
             sender.put("name", "StreetShop");
             sender.put("email", "noreply.streetshop@gmail.com");
             emailData.put("sender", sender);
 
-            // Destinatario
             List<Map<String, String>> to = List.of(Map.of("email", toEmail, "name", userName));
             emailData.put("to", to);
 
-            // Asunto y contenido
             emailData.put("subject", "Confirmación de pedido #" + order.getOrderNumber());
             emailData.put("htmlContent", buildOrderConfirmationHtml(userName, order, items));
 
@@ -90,14 +87,14 @@ public class BrevoEmailService {
     }
 
     private String buildWelcomeEmailHtml(String userName) {
-        return """
+        String html = """
                 <!DOCTYPE html>
                 <html>
                 <head>
                     <style>
                         body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
                         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                        .header { background-color: #000; color: #fff; padding: 30px; text-align: center; }
+                        .header { background-color: #fff; color: #000; padding: 30px; text-align: center; border-bottom: 2px solid #000; }
                         .content { padding: 30px; background-color: #f9f9f9; }
                         .button { display: inline-block; padding: 15px 30px; background-color: #000;
                                 color: #fff; text-decoration: none; border-radius: 5px; margin-top: 20px; }
@@ -107,7 +104,8 @@ public class BrevoEmailService {
                 <body>
                     <div class="container">
                         <div class="header">
-                            <h1>StreetShop</h1>
+                            <img src="https://res.cloudinary.com/dpsfipegh/image/upload/v1780400949/logo-full_wugz06.png"
+                                alt="StreetShop" style="height: 80px; width: auto;" />
                         </div>
                         <div class="content">
                             <h2>¡Bienvenido, %s!</h2>
@@ -119,7 +117,7 @@ public class BrevoEmailService {
                                 <li>Realizar compras de forma segura</li>
                                 <li>Seguir el estado de tus pedidos</li>
                             </ul>
-                            <a href="http://localhost:3000" class="button">Empezar a comprar</a>
+                            <a href="%s" class="button">Empezar a comprar</a>
                         </div>
                         <div class="footer">
                             <p>© 2025 StreetShop - Todos los derechos reservados</p>
@@ -128,7 +126,8 @@ public class BrevoEmailService {
                     </div>
                 </body>
                 </html>
-                """.formatted(userName);
+                """;
+        return String.format(html, userName, frontendUrl);
     }
 
     private String buildOrderConfirmationHtml(String userName, Order order, List<OrderItem> items) {
@@ -150,14 +149,14 @@ public class BrevoEmailService {
                     item.getSubtotal()));
         }
 
-        return """
+        String html = """
                 <!DOCTYPE html>
                 <html>
                 <head>
                     <style>
                         body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
                         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                        .header { background-color: #000; color: #fff; padding: 30px; text-align: center; }
+                        .header { background-color: #fff; color: #000; padding: 30px; text-align: center; border-bottom: 2px solid #000; }
                         .content { padding: 30px; background-color: #f9f9f9; }
                         .order-info { background-color: #fff; padding: 20px; border-radius: 5px; margin: 20px 0; }
                         table { width: 100%%; border-collapse: collapse; margin: 20px 0; }
@@ -171,6 +170,8 @@ public class BrevoEmailService {
                 <body>
                     <div class="container">
                         <div class="header">
+                            <img src="https://res.cloudinary.com/dpsfipegh/image/upload/v1780400949/logo-full_wugz06.png"
+                                alt="StreetShop" style="height: 80px; width: auto; display: block; margin: 0 auto 12px auto;" />
                             <h1>✅ Pedido Confirmado</h1>
                         </div>
                         <div class="content">
@@ -205,7 +206,7 @@ public class BrevoEmailService {
                             </div>
 
                             <p>Puedes descargar tu factura desde tu perfil en cualquier momento.</p>
-                            <a href="http://localhost:3000/profile" class="button">Ver mis pedidos</a>
+                            <a href="%s/profile" class="button">Ver mis pedidos</a>
                         </div>
                         <div class="footer">
                             <p>© 2025 StreetShop - Todos los derechos reservados</p>
@@ -214,13 +215,16 @@ public class BrevoEmailService {
                     </div>
                 </body>
                 </html>
-                """.formatted(
+                """;
+
+        return String.format(html,
                 userName,
                 order.getOrderNumber(),
                 order.getStatus(),
                 order.getShippingAddress(),
                 order.getPhone(),
                 itemsHtml.toString(),
-                order.getTotal());
+                order.getTotal(),
+                frontendUrl);
     }
 }
