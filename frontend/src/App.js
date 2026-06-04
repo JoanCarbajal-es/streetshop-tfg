@@ -42,7 +42,20 @@ function App() {
                     </main>
                     <Footer />
                 </div>
-            <Toaster position="top-right" toastOptions={{ duration: 3000, style: { background: '#1a1a1a', color: '#fff', borderRadius: '8px', fontSize: '14px' } }} />
+            <Toaster
+    position="top-right"
+    toastOptions={{
+        duration: 3000,
+            style: {
+                background: '#272727',
+                color: '#fff',
+                borderRadius: '8px',
+                fontSize: '14px'
+            },
+        success: { icon: null },
+        error: { icon: null }
+        }}
+    />
             </CartProvider>
         </Router>
     );

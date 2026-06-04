@@ -110,14 +110,12 @@ function ProductDetail() {
                 await removeFromFavorites(id);
                 setIsFavorite(false);
                 toast('Eliminado de favoritos', {
-                    icon: '🤍',
                     style: { background: '#1a1a1a', color: '#fff' }
                 });
             } else {
                 await addToFavorites(id);
                 setIsFavorite(true);
                 toast('Añadido a favoritos', {
-                    icon: '❤️',
                     style: { background: '#1a1a1a', color: '#fff' }
                 });
             }
