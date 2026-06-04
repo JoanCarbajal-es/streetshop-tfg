@@ -72,15 +72,13 @@ function ProductDetail() {
         try {
             const res = await fetch(`${API_URL}/api/products/category/${categoryId}`);
             const data = await res.json();
-
-            const filtered = data
-                .filter(p => p.id !== currentId)
-                .slice(0, 4);
+            const filtered = data.filter(p => p.id !== currentId).slice(0, 4);
             setRelated(filtered);
         } catch (err) {
             console.error('Error cargando productos relacionados:', err);
         }
     };
+
     const checkIfFavorite = async () => {
         try {
             const response = await checkFavorite(id);
@@ -108,9 +106,23 @@ function ProductDetail() {
 
     const toggleFavorite = async () => {
         try {
-            if (isFavorite) { await removeFromFavorites(id); setIsFavorite(false); }
-            else            { await addToFavorites(id);      setIsFavorite(true);  }
+            if (isFavorite) {
+                await removeFromFavorites(id);
+                setIsFavorite(false);
+                toast('Eliminado de favoritos', {
+                    icon: '🤍',
+                    style: { background: '#1a1a1a', color: '#fff' }
+                });
+            } else {
+                await addToFavorites(id);
+                setIsFavorite(true);
+                toast('Añadido a favoritos', {
+                    icon: '❤️',
+                    style: { background: '#1a1a1a', color: '#fff' }
+                });
+            }
         } catch (err) {
+            toast.error('Error actualizando favoritos');
             console.error('Error con favoritos:', err);
         }
     };
