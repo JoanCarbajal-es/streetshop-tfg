@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getOrders, downloadInvoice } from '../services/api';
 import '../styles/Profile.css';
+import toast from 'react-hot-toast';
 
 function Profile() {
     const navigate = useNavigate();
@@ -37,7 +38,7 @@ function Profile() {
             link.click();
             link.remove();
         } catch (err) {
-            alert('Error descargando factura');
+            toast.error('Error descargando factura');
             console.error(err);
         }
     };

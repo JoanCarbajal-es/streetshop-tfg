@@ -2,13 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getFavorites, removeFromFavorites } from '../services/api';
 import ProductCard from '../components/ProductCard';
+import ConfirmModal from '../components/ConfirmModal';
 import '../styles/Favorites.css';
+import toast from 'react-hot-toast';
 
 function Favorites() {
     const navigate = useNavigate();
     const [favorites, setFavorites] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [modal, setModal] = useState({ isOpen: false, productId: null });
 
     useEffect(() => { loadFavorites(); }, []);
 
@@ -25,16 +28,25 @@ function Favorites() {
         }
     };
 
-    const handleRemoveFavorite = async (productId, e) => {
+    const handleRemoveFavorite = (productId, e) => {
         e.preventDefault();
-        if (!window.confirm('¿Eliminar de favoritos?')) return;
+        setModal({ isOpen: true, productId });
+    };
+
+    const handleModalConfirm = async () => {
+        const productId = modal.productId;
+        setModal({ isOpen: false, productId: null });
         try {
             await removeFromFavorites(productId);
             loadFavorites();
         } catch (err) {
-            alert('Error eliminando favorito');
+            toast.error('Error eliminando favorito');
             console.error(err);
         }
+    };
+
+    const handleModalCancel = () => {
+        setModal({ isOpen: false, productId: null });
     };
 
     if (loading) return <div className="favorites__loading">Cargando favoritos...</div>;
@@ -52,6 +64,17 @@ function Favorites() {
 
     return (
         <div className="favorites">
+            <ConfirmModal
+                isOpen={modal.isOpen}
+                title="¿Eliminar de favoritos?"
+                message="Este producto se eliminará de tu lista de favoritos."
+                confirmText="Eliminar"
+                cancelText="Cancelar"
+                onConfirm={handleModalConfirm}
+                onCancel={handleModalCancel}
+                danger={true}
+            />
+
             <div className="favorites__header">
                 <h1 className="favorites__title">Mis Favoritos</h1>
                 <p className="favorites__subtitle">{favorites.length} productos guardados</p>

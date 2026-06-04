@@ -13,6 +13,7 @@ import Favorites from './pages/Favorites';
 import Checkout from './pages/Checkout';
 import Admin from './pages/Admin';
 import { CartProvider } from './context/CartContext';
+import { Toaster } from 'react-hot-toast';
 import './styles/global.css';
 import './styles/App.css';
 
@@ -41,6 +42,7 @@ function App() {
                     </main>
                     <Footer />
                 </div>
+            <Toaster position="top-right" toastOptions={{ duration: 3000, style: { background: '#1a1a1a', color: '#fff', borderRadius: '8px', fontSize: '14px' } }} />
             </CartProvider>
         </Router>
     );

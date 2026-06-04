@@ -11,6 +11,7 @@ import { getCart, createOrder, createPaymentIntent } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import '../styles/Checkout.css';
+import toast from 'react-hot-toast';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
@@ -158,7 +159,7 @@ function Checkout() {
             const items = response.data;
 
             if (items.length === 0) {
-                alert('Tu carrito está vacío');
+                toast.error('Tu carrito está vacío');
                 navigate('/cart');
                 return;
             }
@@ -174,7 +175,7 @@ function Checkout() {
             setLoading(false);
         } catch (err) {
             console.error(err);
-            alert('Error cargando el carrito');
+            toast.error('Error cargando el carrito');
             navigate('/cart');
         }
     };

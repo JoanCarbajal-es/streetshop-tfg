@@ -4,6 +4,7 @@ import { register as registerApi } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import logoFull from '../assets/logo-full.png';
 import '../styles/Register.css';
+import toast from 'react-hot-toast';
 
 function Register() {
     const navigate = useNavigate();
@@ -23,7 +24,7 @@ function Register() {
             const response = await registerApi(formData);
             const { token, email, fullName, role } = response.data;
             login({ email, fullName, role }, token);
-            alert('✅ Registro exitoso');
+            toast.success('Registro exitoso');
             navigate('/');
         } catch (err) {
             setError(err.response?.data?.error || 'Error en el registro');

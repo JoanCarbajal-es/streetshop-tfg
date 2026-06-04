@@ -3,24 +3,20 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { getCart, updateCartItem, removeFromCart, clearCart } from '../services/api';
 import { useCart } from '../context/CartContext';
+import ConfirmModal from '../components/ConfirmModal';
 import '../styles/Cart.css';
+import toast from 'react-hot-toast';
 
 function Cart() {
     const navigate = useNavigate();
     const { isAuthenticated } = useAuth();
-
-    const handleCheckout = () => {
-        if (!isAuthenticated()) {
-            navigate('/login', { state: { from: '/cart' } });
-        } else {
-            navigate('/checkout');
-        }
-    };
+    const { refreshCart } = useCart();
 
     const [cartItems, setCartItems] = useState([]);
-    const { refreshCart } = useCart();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const [modal, setModal] = useState({ isOpen: false, type: null, itemId: null });
 
     useEffect(() => { loadCart(); }, []);
 
@@ -37,6 +33,14 @@ function Cart() {
         }
     };
 
+    const handleCheckout = () => {
+        if (!isAuthenticated()) {
+            navigate('/login', { state: { from: '/cart' } });
+        } else {
+            navigate('/checkout');
+        }
+    };
+
     const handleUpdateQuantity = async (itemId, newQuantity) => {
         if (newQuantity < 1) return;
         try {
@@ -44,33 +48,37 @@ function Cart() {
             loadCart();
             refreshCart();
         } catch (err) {
-            alert('Error actualizando cantidad');
+            toast.error('Error actualizando cantidad');
             console.error(err);
         }
     };
 
-    const handleRemoveItem = async (itemId) => {
-        if (!window.confirm('¿Eliminar este producto del carrito?')) return;
+    const handleRemoveItem = (itemId) => {
+        setModal({ isOpen: true, type: 'remove', itemId });
+    };
+
+    const handleClearCart = () => {
+        setModal({ isOpen: true, type: 'clear', itemId: null });
+    };
+
+    const handleModalConfirm = async () => {
+        setModal({ isOpen: false, type: null, itemId: null });
         try {
-            await removeFromCart(itemId);
+            if (modal.type === 'remove') {
+                await removeFromCart(modal.itemId);
+            } else if (modal.type === 'clear') {
+                await clearCart();
+            }
             loadCart();
             refreshCart();
         } catch (err) {
-            alert('Error eliminando producto');
+            toast.error(modal.type === 'remove' ? 'Error eliminando producto' : 'Error vaciando el carrito');
             console.error(err);
         }
     };
 
-    const handleClearCart = async () => {
-        if (!window.confirm('¿Vaciar todo el carrito?')) return;
-        try {
-            await clearCart();
-            loadCart();
-            refreshCart();
-        } catch (err) {
-            alert('Error vaciando el carrito');
-            console.error(err);
-        }
+    const handleModalCancel = () => {
+        setModal({ isOpen: false, type: null, itemId: null });
     };
 
     const calculateTotal = () =>
@@ -93,6 +101,19 @@ function Cart() {
 
     return (
         <div className="cart">
+            <ConfirmModal
+                isOpen={modal.isOpen}
+                title={modal.type === 'clear' ? '¿Vaciar carrito?' : '¿Eliminar producto?'}
+                message={modal.type === 'clear'
+                    ? 'Se eliminarán todos los productos de tu carrito. Esta acción no se puede deshacer.'
+                    : 'Este producto se eliminará de tu carrito.'}
+                confirmText={modal.type === 'clear' ? 'Vaciar todo' : 'Eliminar'}
+                cancelText="Cancelar"
+                onConfirm={handleModalConfirm}
+                onCancel={handleModalCancel}
+                danger={true}
+            />
+
             <div className="cart__header">
                 <h1 className="cart__title">Mi Carrito</h1>
                 <button onClick={handleClearCart} className="cart__clear-btn">Vaciar carrito</button>

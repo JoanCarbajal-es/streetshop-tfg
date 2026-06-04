@@ -1,0 +1,109 @@
+.confirm-modal__overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: overlay-in 0.15s ease;
+}
+
+@keyframes overlay-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.confirm-modal {
+    background: var(--color-white);
+    border-radius: var(--radius-md);
+    padding: 36px 32px 28px;
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    animation: modal-in 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modal-in {
+    from { opacity: 0; transform: scale(0.9) translateY(10px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.confirm-modal__icon {
+    font-size: 40px;
+    margin-bottom: 16px;
+    line-height: 1;
+}
+
+.confirm-modal__title {
+    font-family: var(--font-display);
+    font-size: 20px;
+    letter-spacing: 1.5px;
+    margin: 0 0 10px 0;
+    color: var(--color-black);
+}
+
+.confirm-modal__message {
+    font-size: 14px;
+    color: var(--color-grey-600);
+    margin: 0 0 28px 0;
+    line-height: 1.5;
+}
+
+.confirm-modal__actions {
+    display: flex;
+    gap: 10px;
+}
+
+.confirm-modal__btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background var(--transition), color var(--transition), transform 0.1s;
+    border: none;
+}
+
+.confirm-modal__btn:active {
+    transform: scale(0.97);
+}
+
+.confirm-modal__btn--cancel {
+    background: var(--color-grey-100);
+    color: var(--color-grey-600);
+    border: 1.5px solid var(--color-grey-200);
+}
+
+.confirm-modal__btn--cancel:hover {
+    background: var(--color-grey-200);
+    color: var(--color-black);
+}
+
+.confirm-modal__btn--danger {
+    background: var(--color-danger);
+    color: white;
+}
+
+.confirm-modal__btn--danger:hover {
+    background: #c0392b;
+}
+
+.confirm-modal__btn--confirm {
+    background: var(--color-black);
+    color: white;
+}
+
+.confirm-modal__btn--confirm:hover {
+    background: #222;
+}
+
+@media (max-width: 480px) {
+    .confirm-modal {
+        margin: 0 16px;
+        padding: 28px 20px 22px;
+    }
+}

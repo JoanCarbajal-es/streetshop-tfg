@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -33,10 +34,10 @@ function OrdersAdmin() {
                 {},
                 { headers: { Authorization: `Bearer ${token}` }}
             );
-            alert('Estado actualizado');
+            toast.success('Estado actualizado');
             loadOrders();
         } catch (err) {
-            alert('Error actualizando estado');
+            toast.error('Error actualizando estado');
         }
     };
 
