@@ -2,7 +2,6 @@ import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
-// Crear instancia de axios
 const api = axios.create({
     baseURL: API_URL,
     headers: {
@@ -10,7 +9,6 @@ const api = axios.create({
     },
 });
 
-// Interceptor de REQUEST: añadir token JWT a todas las peticiones
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
@@ -22,12 +20,10 @@ api.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-// Interceptor de RESPONSE: detectar token caducado (401) y hacer logout automático
 api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response?.status === 401) {
-            // Token caducado o inválido — limpiar sesión y redirigir al login
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             window.location.href = '/login';

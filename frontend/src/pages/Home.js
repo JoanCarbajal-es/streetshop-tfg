@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { getProducts, getCategories } from '../services/api';
 import ProductCard from '../components/ProductCard';
 import '../styles/Home.css';
 
 function Home() {
+    const location = useLocation();
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -14,8 +16,9 @@ function Home() {
     const productsPerPage = 12;
 
     useEffect(() => {
+        setError(null);
         loadData();
-    }, []);
+    }, [location.key]);
 
     const loadData = async () => {
         try {
@@ -121,7 +124,6 @@ function Home() {
                 <div className="home__empty">No hay productos en esta categoría</div>
             )}
 
-            {/* Paginación */}
             {totalPages > 1 && (
                 <div className="home__pagination">
                     <button
