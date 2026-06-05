@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * StreetShop - E-commerce Platform
- * Clase principal de la aplicación Spring Boot
  * 
  * @author Joan Alonso Carbajal Quispe
  * @version 1.0.0

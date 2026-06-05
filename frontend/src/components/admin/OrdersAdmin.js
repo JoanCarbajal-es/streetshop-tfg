@@ -7,6 +7,7 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 function OrdersAdmin() {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [expandedOrder, setExpandedOrder] = useState(null);
 
     useEffect(() => {
         loadOrders();
@@ -41,6 +42,10 @@ function OrdersAdmin() {
         }
     };
 
+    const toggleDetail = (orderId) => {
+        setExpandedOrder(prev => prev === orderId ? null : orderId);
+    };
+
     const getStatusBadgeClass = (status) => {
         const classes = {
             PENDING: 'orders-admin__badge--pending',
@@ -67,13 +72,14 @@ function OrdersAdmin() {
         <div className="orders-admin">
             <div className="admin__card">
                 <h2 className="admin__card-title">Gestión de Pedidos</h2>
-                
+
                 {orders.length === 0 ? (
                     <p className="orders-admin__empty">No hay pedidos todavía</p>
                 ) : (
                     <div className="orders-admin__list">
                         {orders.map(order => (
                             <div key={order.id} className="orders-admin__item">
+                                {/* Cabecera */}
                                 <div className="orders-admin__header">
                                     <div>
                                         <h3 className="orders-admin__number">#{order.orderNumber}</h3>
@@ -92,25 +98,56 @@ function OrdersAdmin() {
                                     </span>
                                 </div>
 
+                                {/* Info básica */}
                                 <div className="orders-admin__details">
                                     <p><strong>Total:</strong> {order.total} €</p>
+                                    <p><strong>Email:</strong> {order.buyerEmail || '—'}</p>
                                     <p><strong>Dirección:</strong> {order.shippingAddress}</p>
                                     <p><strong>Teléfono:</strong> {order.phone}</p>
                                 </div>
 
-                                <div className="orders-admin__status">
-                                    <label className="admin__label">Cambiar estado:</label>
-                                    <select
-                                        value={order.status}
-                                        onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                                        className="admin__select"
-                                    >
-                                        <option value="PENDING">Pendiente</option>
-                                        <option value="PAID">Pagado</option>
-                                        <option value="SHIPPED">Enviado</option>
-                                        <option value="DELIVERED">Entregado</option>
-                                    </select>
-                                </div>
+                                {/* Botón ver detalle */}
+                                <button
+                                    type="button"
+                                    className="orders-admin__toggle-btn"
+                                    onClick={() => toggleDetail(order.id)}
+                                >
+                                    {expandedOrder === order.id ? 'Ocultar productos ▲' : `Ver productos (${order.items?.length ?? 0}) ▼`}
+                                </button>
+
+                                {/* Detalle de items */}
+                                {expandedOrder === order.id && (
+                                    <div className="orders-admin__items">
+                                        {order.items && order.items.length > 0 ? (
+                                            <table className="orders-admin__table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Producto</th>
+                                                        <th>Marca</th>
+                                                        <th>Talla</th>
+                                                        <th>Cantidad</th>
+                                                        <th>Precio</th>
+                                                        <th>Subtotal</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {order.items.map(item => (
+                                                        <tr key={item.id}>
+                                                            <td>{item.productName}</td>
+                                                            <td>{item.brand}</td>
+                                                            <td>{item.size || '—'}</td>
+                                                            <td>{item.quantity}</td>
+                                                            <td>{item.price} €</td>
+                                                            <td>{item.subtotal} €</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        ) : (
+                                            <p className="orders-admin__no-items">Sin productos registrados</p>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>
