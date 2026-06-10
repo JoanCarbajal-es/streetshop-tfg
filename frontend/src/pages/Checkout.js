@@ -34,8 +34,14 @@ function CheckoutForm({ cartItems, formData, handleChange, calculateTotal, onSuc
         setProcessing(true);
         setStripeError(null);
 
+        sessionStorage.setItem('ss_shipping', formData.shippingAddress);
+        sessionStorage.setItem('ss_phone', formData.phone);
+
         const { error, paymentIntent } = await stripe.confirmPayment({
             elements,
+            confirmParams: {
+                return_url: `${window.location.origin}/checkout/return`,
+            },
             redirect: 'if_required',
         });
 
@@ -97,7 +103,6 @@ function CheckoutForm({ cartItems, formData, handleChange, calculateTotal, onSuc
 
             <h2 className="checkout-section-title" style={{ marginTop: '32px' }}>Método de pago</h2>
 
-            {/* PaymentElement muestra automáticamente: tarjeta, Google Pay, Apple Pay y Klarna */}
             <div className="checkout-stripe-element">
                 <PaymentElement
                     options={{
@@ -108,7 +113,7 @@ function CheckoutForm({ cartItems, formData, handleChange, calculateTotal, onSuc
                         },
                         defaultValues: {
                             billingDetails: {
-                                email: userEmail || '',  // ← precarga el email del usuario logueado
+                                email: userEmail || '',
                             },
                         },
                     }}
@@ -117,7 +122,7 @@ function CheckoutForm({ cartItems, formData, handleChange, calculateTotal, onSuc
 
             {stripeError && (
                 <div className="checkout-stripe-error">
-                    ⚠️ {stripeError}
+                    {stripeError}
                 </div>
             )}
 
@@ -191,7 +196,7 @@ function Checkout() {
     const handleSuccess = (orderNumber) => {
         refreshCart();
         navigate('/profile', {
-            state: { successMessage: `✅ ¡Pedido #${orderNumber} realizado con éxito!` },
+            state: { successMessage: `¡Pedido #${orderNumber} realizado con éxito!` },
         });
     };
 
@@ -217,7 +222,7 @@ function Checkout() {
 
     return (
         <div className="checkout-container">
-            <h1 className="checkout-title">💳 Finalizar Compra</h1>
+            <h1 className="checkout-title">Finalizar Compra</h1>
 
             <div className="checkout-content">
                 <div className="checkout-form-section">
